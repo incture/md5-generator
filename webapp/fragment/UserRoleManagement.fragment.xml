@@ -1,0 +1,66 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout">
+	<VBox renderType="Bare" class="sapUiSizeCompact" width="100%">
+		<HBox width="auto" renderType="Bare" alignItems="Center" justifyContent="SpaceBetween" class="sapUiSmallMarginBeginEnd sapUiTinyMarginTop">
+			<HBox width="10%">
+				<Button text="{= ${oDefaultDataModel>/isUserRoleType}==='VIEW' ? ${i18n>EDIT_USER_DETAILS_TEXT} : ${i18n>VIEW_USER_DETAILS}}"
+					type="Emphasized" press="enableRolesEditable" class="wbEmphasizedButtonStyleClass" enabled="{= ${oAppModel>/isChanged}===false}"/>
+			</HBox>
+			<SearchField class="wbAdminMGroupsSearch " width="25%" liveChange=".searhRoleListFn($event,'WB_MANAGEROLE_LIST')"/>
+		</HBox>
+		<Table width="auto" id="WB_MANAGEROLE_LIST" class="wbCustomTableClass sapUiTinyMarginTop sapUiTinyMarginBottom sapUiSmallMarginBeginEnd"
+			items="{oConstantsModel>/allUsers}" busy="{oDefaultDataModel>/enableBusyIndicators}" busyIndicatorDelay="0">
+			<columns>
+				<Column width="10%">
+					<Text text="{i18n>USERID}" class="wbTransformToUpperCase"/>
+				</Column>
+				<Column width="12%">
+					<Text text="{i18n>FIRSTNAME_TEXT}" class="wbTransformToUpperCase"/>
+				</Column>
+				<Column width="12%">
+					<Text text="{i18n>LASTNAME_TEXT}" class="wbTransformToUpperCase"/>
+				</Column>
+				<Column width="17%">
+					<Text text="{i18n>EMAIL_ID_TEXT}" class="wbTransformToUpperCase"/>
+				</Column>
+				<Column width="9%">
+					<Text text="{i18n>ROLE}" class="wbTransformToUpperCase"/>
+				</Column>
+				<Column width="6%"></Column>
+			</columns>
+			<items>
+				<ColumnListItem>
+					<cells>
+						<HBox renderType="Bare">
+							<Text text="{oConstantsModel>userId}" visible="{= ${oDefaultDataModel>/isUserRoleType}==='VIEW' ? true:true}"/>
+							<!--<Input value="{oConstantsModel>userId}" visible="{= ${oDefaultDataModel>/isUserRoleType}==='EDIT'}" class="wbDefaultCustomInputWrapper"></Input>-->
+						</HBox>
+						<HBox renderType="Bare">
+							<Text text="{oConstantsModel>userFirstName}" visible="{= ${oDefaultDataModel>/isUserRoleType}==='VIEW'}"/>
+							<Input value="{oConstantsModel>userFirstName}" visible="{= ${oDefaultDataModel>/isUserRoleType}==='EDIT'}"
+								class="wbDefaultCustomInputWrapper" change="changeProperty"></Input>
+						</HBox>
+						<HBox renderType="Bare">
+							<Text text="{oConstantsModel>userLastName}" visible="{= ${oDefaultDataModel>/isUserRoleType}==='VIEW'}"/>
+							<Input value="{oConstantsModel>userLastName}" visible="{= ${oDefaultDataModel>/isUserRoleType}==='EDIT'}"
+								class="wbDefaultCustomInputWrapper" change="changeProperty"></Input>
+						</HBox>
+						<HBox renderType="Bare">
+							<Text text="{oConstantsModel>userEmail}" visible="{= ${oDefaultDataModel>/isUserRoleType}==='VIEW'}"/>
+							<Input value="{oConstantsModel>userEmail}" change="changeProperty" visible="{= ${oDefaultDataModel>/isUserRoleType}==='EDIT'}"
+								class="wbDefaultCustomInputWrapper"></Input>
+						</HBox>
+						<HBox renderType="Bare">
+							<Text text="{oConstantsModel>userRole}" visible="{= ${oDefaultDataModel>/isUserRoleType}==='VIEW'}"/>
+							<Select class="wbDefaultCustomInputWrapper" forceSelection="false" selectedKey="{oConstantsModel>userRole}"
+								visible="{= ${oDefaultDataModel>/isUserRoleType}==='EDIT'}" change="changeProperty" width="88%">
+								<core:Item text="User" key="User"/>
+								<core:Item text="Admin" key="Admin"/>
+							</Select>
+						</HBox>
+						<!--<Button text="{i18n>EDIT_TEXT}" type="Reject" class="wbAdminMGroupsRemoveBtn"/>-->
+					</cells>
+				</ColumnListItem>
+			</items>
+		</Table>
+	</VBox>
+</core:FragmentDefinition>

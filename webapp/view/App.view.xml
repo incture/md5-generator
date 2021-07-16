@@ -1,0 +1,260 @@
+<mvc:View controllerName="oneapp.incture.workbox.controller.App" xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m"
+	xmlns:core="sap.ui.core" xmlns:tnt="sap.tnt" xmlns:custom="oneapp.incture.workbox.controlExtension" xmlns:u="sap.ui.unified">
+	<App>
+		<pages>
+			<Page showHeader="{path:'oAppModel>/functionality/expanded' ,formatter: 'oneapp.incture.workbox.util.formatter.wbSetClassMainContentPage'}"
+				class="wbMainPagePadding" visible="{oAppModel>/isAppViewVisible}">
+				<customHeader>
+					<Bar>
+						<contentLeft>
+							<HBox alignItems="Center" renderType="Bare">
+								<HBox width="12.5rem" renderType="Bare" alignItems="Center">
+									<!--<Image class="sapUiTinyMarginBegin" src="images/Cherrywork_logo.png"/>-->
+									<Text text="{i18n>appTitle}" class="sapUiTinyMarginBegin wbHeaderAppTitleText"/>
+								</HBox>
+								<!--CHANGING THE FOLLOWING HBOX BLOCK WILL AFFECT ADV FILTER FRAG OPENING CSS-->
+								<HBox width="38.8rem" renderType="Bare" alignItems="Center" class="wbHeaderSeachField">
+									<ComboBox class="wbAdvSearchInboxTypeComboBox wbAdvSearchComboboxInactive" items="{oAppModel>/searchInboxDto}"
+										id="ID_GLOBAL_SEARCH_INBOX_TYPE" selectedKey="{oAdvanceFilterModel>/searchInboxType}"
+										showButton="{= ${oAppModel>/currentView} !== 'dashBoard' &amp;&amp; ${oAppModel>/currentViewPage} !== 'manageDashboardTiles' ? false:true}"
+										textAlign="Center"
+										editable="{= ${oAppModel>/currentView} !== 'dashBoard' &amp;&amp; ${oAppModel>/currentViewPage} !== 'manageDashboardTiles' ? false:true}"
+										width="8.4rem" visible="{path: '/',formatter: 'oneapp.incture.workbox.util.formatter.wbSetReadOnlyCB'}">
+										<!--60%-->
+										<core:Item text="{oAppModel>name}" key="{oAppModel>inboxId}"
+											enabled="{= ${oAppModel>inboxId} ==='Chat' || ${oAppModel>inboxId} ==='PinnedTasks' ? false:true}"/>
+									</ComboBox>
+									<!-- By Karishma-->
+									<!--//change-->
+									<Input value="{oAdvanceFilterModel>/sGlobalSearchTerm}"
+										visible="{parts: ['oAdvanceFilterModel>/subjectIndex','oAppModel>/currentViewPage','oAppModel>/filterTokens'] ,formatter: 'oneapp.incture.workbox.util.formatter.wbSetSearchSubject'}"
+										class="wbHeaderSearchClass" placeholder="{i18n>SEARCH_TEXT}" liveChange="onChangeGlobalSearch" width="71%" submit="applyFilter"
+										id="ID_GLOBAL_SEARCH" suggestionItemSelected="onSelectingSuggestionItem" suggestionItems="{oAdvanceFilterModel>/aUsers}"
+										showSuggestion="{oAppModel>/bGlobalSearchSuggestion}">
+										<suggestionItems>
+											<core:Item text="{oAdvanceFilterModel>displayName}"/>
+										</suggestionItems>
+									</Input>
+									<HBox renderType="Bare" width="71%" height="2.25rem" visible="{= ${oAppModel>/filterTokens}.length > 0 ? true : false}"
+										class="wbFilterHeaderClass" justifyContent="SpaceBetween" alignContent="Center">
+										<core:Icon src="sap-icon://initiative" class="wbFilterCarouselBtn wbFilterCarouselBtnL" press="scrollFilterCarousel($event,'L')"/>
+										<ScrollContainer width="100%" vertical="false" horizontal="true" id="ID_FILTER_CAROUSEL" content="{path:'oAppModel>/filterTokens'}"
+											class="wbFilterScrollContainer wbHideScrollY"
+											visible="{path:'oAppModel>/filterTokens' ,formatter: 'oneapp.incture.workbox.util.formatter.wbFilterScroll'}">
+											<Token key="{oAppModel>key}" text="{oAppModel>value}" tooltip="{oAppModel>key}"
+												editable="{= ${oAppModel>/currentView} !== 'processFlow' &amp;&amp; ${oAppModel>/currentView} !== 'taskDetailPage' }"
+												delete="removeFilterTokenFn" class="wbCustomTokenClass sapUiTinyMarginEnd"/>
+										</ScrollContainer>
+										<core:Icon src="sap-icon://initiative" class="wbFilterCarouselBtn wbFilterCarouselBtnR" press="scrollFilterCarousel($event,'R')"/>
+									</HBox>
+									<!-- By Karishma-->
+									<core:Icon size="1.4rem" press="onOpenAdvFilter" class="wbAdvSearchDropdownIconInactive" id="WB_ADVANCE_SEARCH_ICON"
+										visible="{path:'oAppModel>/currentViewPage' ,formatter: 'oneapp.incture.workbox.util.formatter.wbSetSearchIcon'}"/>
+									<!--<core:Icon src="sap-icon://filter" press="getFilterTokensFn" class="sapUiSmallMarginBegin wbFilterIcon"-->
+									<!--	visible="{= ${oAppModel>/filterTokens}.length !== 0 ? true : false}"/>-->
+									<!--<Text text="{= ${oAppModel>/filterTokens}.length}" class="wbFilterCount" visible="{= ${oAppModel>/filterTokens}.length>0}"/>-->
+								</HBox>
+							</HBox>
+						</contentLeft>
+						<contentRight>
+							<core:Icon src="sap-icon://bell" tooltip="{i18n>NOTIFICATIONS_TEXT}" class="wbHeaderSettingsIconClass wbNotificationIcon"
+								press="openNotification"/>
+							<core:Icon src="sap-icon://circle-task-2" class="wbNotificationDot"
+								visible="{= ${oUserSettingsModel>/settings/notification/count}>0 &amp;&amp; ${oUserSettingsModel>/settings/badge}==='Dot'}"/>
+							<Text text="{oUserSettingsModel>/settings/notification/count}" class="wbNotificationCount"
+								visible="{= ${oUserSettingsModel>/settings/notification/count}>0 &amp;&amp; ${oUserSettingsModel>/settings/badge}==='Count'}"/>
+							<core:Icon src="sap-icon://action-settings" tooltip="{i18n>SETTINGS_TEXT}"
+								class="wbHeaderSettingsIconClass sapUiTinyMarginBegin sapUiTinyMarginEnd" press="openSettings"/>
+							<Avatar displaySize="XS" class="wbHeaderAvatar"
+								initials="{path: 'oAppModel>/loggedInUserName',formatter: 'oneapp.incture.workbox.util.formatter.wbGetAvatarInitials'}"
+								press="openUserProfile"/>
+						</contentRight>
+					</Bar>
+				</customHeader>
+				<content>
+					<tnt:ToolPage sideExpanded="{oAppModel>/functionality/expanded}" class="wbSideNavListClass">
+						<tnt:header>
+							<!-- width="{= ${oAppModel>/currentView} !== 'dashBoard' ? 'auto' : '3rem'}"-->
+							<tnt:ToolHeader>
+								<Button icon="sap-icon://menu2" tooltip="{i18n>EXPAND_COLLAPSE_TEXT}" press="onExpandCollapseNavBar" class="wbCustomButtonClass"
+									enabled="{= ${oAppModel>/currentView} === 'dashBoard' || ${oAppModel>/currentView} === 'processFlow' || ${oAppModel>/currentView} === 'taskDetailPage' || ${oAppModel>/currentView} === 'createTask'? false : true}"
+									type="Transparent"/>
+								<HBox renderType="Bare" alignItems="Center" visible="{= ${oAppModel>/currentView} !== 'dashBoard' ? true : false}" width="12.75%">
+									<Button text="{i18n>NEW_TASK_BUT_TEXT}" type="Emphasized" width="60%" class="wbEmphasizedButtonStyleClass" press="onOpenCreateTaskFragment"
+										enabled="{= ${oAppModel>/currentView} !== 'createTask' ? true : false}"/>
+								</HBox>
+								<Text text="{i18n>DASHBOARD_TEXT}" visible="{= ${oAppModel>/currentView} === 'dashBoard' ? true : false}" class="sapUiSmallMarginBegin"/>
+								<!--Start - Chat Screen Collaboration Text-->
+								<Text text="{i18n>COLLABORATION_TEXT}" visible="{= ${oAppModel>/currentView} === 'taskBoard' ? true : false}"/>
+								<!--End - Chat Screen Collaboration Text-->
+								<!--Start - UserWorkload screen Component-->
+								<Select change="UWLprocessSelect" class="sapUiSizeCompact sapUiSmallMarginBegin wbUWLDropdownStyle"
+									selectedKey="{oAppModel>/UWLProcessSelected}" items="{oConstantsModel>/processNames}"
+									visible="{= ${oAppModel>/currentView} === 'userWorkload' ? true : false}"
+									enabled="{= ${oAppModel>/viewWorkLoadTable} === false ? true : false}">
+									<core:Item text="{oConstantsModel>processDisplayName}" key="{oConstantsModel>processName}"/>
+								</Select>
+								<!--End - UserWorkload screen Component-->
+								<!--Start - Create Task screen Component-->
+								<HBox renderType="Bare" alignItems="Center" visible="{= ${oAppModel>/currentView} === 'createTask' ? true : false}">
+									<Button icon="sap-icon://customfont/sendArrow" text="{i18n>CREATE_TEXT}" class="wbCustomButtonClass" type="Transparent"
+										press="onSubmitNewTask" enabled="{oAppModel>/enableSubmitButton}"/>
+									<Button icon="sap-icon://customfont/SaveIcon" text="{i18n>SAVE_TEXT}" class="wbCustomButtonClass" type="Transparent" press="onSaveDraft"
+										enabled="{oAppModel>/enableSaveButton}"/>
+									<u:FileUploader icon="sap-icon://upload" class="wbUploadButtonPosition wbCustomButtonClass" name="myFileUpload" uploadUrl="upload/"
+										tooltip="Upload your file" change="uploadInstaceExcel" typeMissmatch="handleTypeMissmatch" style="Emphasized" fileType="xlsx"
+										buttonOnly="true" sameFilenameAllowed="true" buttonText="{i18n>UPLOAD_EXCEL}" enabled="{oAppModel>/enableExcelUploadButton}" visible="false"/>
+									<u:FileUploader icon="sap-icon://upload" class="wbUploadButtonPosition wbCustomButtonClass" name="myFileUpload" uploadUrl="upload/"
+										tooltip="Upload your file" change="uploadInstaceExcelCustom" typeMissmatch="handleTypeMissmatch" style="Emphasized" fileType="xlsx"
+										buttonOnly="true" sameFilenameAllowed="true" buttonText="{i18n>UPLOAD_EXCEL}" enabled="{oAppModel>/enableExcelUploadButton}" visible="true"/>
+									<Button icon="sap-icon://customfont/ResetIcon" text="{i18n>CLEAR_TEXT}" class="wbCustomButtonClass" type="Transparent" press="onClickClear"
+										enabled="{oAppModel>/enableExcelUploadButton}"/>
+									<Button icon="sap-icon://delete" text="{i18n>DISCARD_TEXT}" class="wbCustomButtonClass" type="Transparent" press="onClickDiscard"
+										enabled="{oAppModel>/enableExcelUploadButton}"/>
+								</HBox>
+								<!--End - Create Task screen Component-->
+								<!--Action buttons - Start-->
+								<HBox renderType="Bare" alignItems="Center"
+									visible="{= ${oAppModel>/currentView} === 'unifiedInbox' || ${oAppModel>/currentView} === 'taskDetailPage' ? true : false}">
+									<HBox items="{oActionHeader>/dtoDefaultCopy}" renderType="Bare" alignItems="Center" class="sapUiSizeCompact"
+										visible="{= ${oAppModel>/currentViewPage} === 'Draft' ? false : true}">
+										<Button text="{oActionHeader>name}" icon="{oActionHeader>icon}" enabled="{oActionHeader>enabled}" type="Transparent"
+											class="wbCustomButtonClass" textDirection="RTL" press="onActionPress"
+											visible='{parts:["oActionHeader>visible", "oAppModel>/currentViewPage", "oActionHeader>key", "oAppModel>/inboxTab"], formatter:"oneapp.incture.workbox.util.formatter.setActionButtonVisibility"}'>
+											<customData>
+												<core:CustomData key="{oActionHeader>key}" value="{oActionHeader>name}"/>
+											</customData>
+										</Button>
+									</HBox>
+									<Button icon="sap-icon://delete" text="{i18n>DELETE_TEXT}" press="bulkDeleteDraft" type="Transparent" class="wbCustomButtonClass"
+										enabled="{oAppModel>/enableBulkDeleteButton}" visible="{= ${oAppModel>/currentViewPage} === 'Draft' ? true : false}"/>
+									<Button icon="images/MoreIcon.png" text="More" press="onMoreActionsClick" type="Transparent"
+										class="wbCustomButtonClass wbCustomButtonMoreClass" enabled="{oActionHeader>/enableMore}" visible="false"/>
+								</HBox>
+								<!--Action buttons - End-->
+								<Text text="{oAppModel>/currentViewDisplayText}" visible="{= ${oAppModel>/currentView} === 'adminConsole'}"/>
+								<ToolbarSpacer/>
+								<!--Start - Dashboard screen Component-->
+								<HBox justifyContent="End" alignItems="Center" renderType="Bare" class="sapUiSizeCompact">
+									<Button icon="images/PrintIcon.png" text="{i18n>PRINT_TEXT}" type="Transparent" class="wbCustomButtonClass" visible="false"/>
+									<Button icon="sap-icon://business-objects-experience" tooltip="{i18n>DASHBOARD_SETTINGS_TEXT}" type="Transparent"
+										class="wbCustomButtonClass" visible="{= ${oAppModel>/currentView} === 'dashBoard' ? true : false}" press="dashBoardSettings"/>
+									<Button icon="sap-icon://refresh" tooltip="{i18n>REFRESH_TEXT}" type="Transparent" class="wbCustomButtonClass"
+										visible="{= ${oAppModel>/currentView} === 'dashBoard' ? true : false}" press="refreshDashBoardFn"/>
+								</HBox>
+								<!--End - Dashboard screen Component-->
+								<!--Start - UserWorkload screen Component-->
+								<Select change="onSortingUser" class="sapUiSizeCompact wbUWLDropdownStyle sapUiSmallMarginEnd" forceSelection="false"
+									selectedKey="{oAppModel>/selectedSort}" items="{oAppModel>/sortData}"
+									visible="{= ${oAppModel>/currentView} === 'userWorkload' ? true : false}"
+									enabled="{= ${oAppModel>/viewWorkLoadTable} === false ? true : false}">
+									<core:Item text="{oAppModel>value}" key="{oAppModel>key}"/>
+								</Select>
+								<!--End - UserWorkload screen Component-->
+								<!--Visible property to be changed when needed-->
+								<!--visible="{= ${oAppModel>/currentView} === 'unifiedInbox' ? true : false}"-->
+								<HBox justifyContent="End" alignItems="Center" renderType="Bare" class="sapUiSizeCompact">
+									<Button icon="images/PrintIcon.png" text="{i18n>PRINT_TEXT}" type="Transparent" class="wbCustomButtonClass" visible="false"/>
+									<Button icon="sap-icon://customfont/ExportIcon" text="{i18n>EXPORT_TEXT}" type="Transparent" class="wbCustomButtonClass"
+										visible="{= ${oAppModel>/currentView} === 'unifiedInbox' ? true : false}" press="exportData"/>
+								</HBox>
+								<!--Start - Admin Console screen Component-->
+								<HBox justifyContent="End" alignItems="Center" renderType="Bare" class="sapUiSizeCompact">
+									<Button text="{i18n>ADD_FILTER_TEXT}" class="wbCustomButtonClass" type="Transparent"
+										visible="{= ${oAppModel>/currentViewPage} === 'manageDashboardTiles' &amp;&amp; ${oAppModel>/currentView} === 'adminConsole' ? true : false}"
+										press="addDashboardTile"/>
+								</HBox>
+								<HBox renderType="Bare" alignItems="Center" justifyContent="End" class="sapUiSizeCompact"
+									visible="{= (${oAppModel>/currentViewPage} === 'workFlow' || ${oAppModel>/currentViewPage} === 'createWorkFlow') &amp;&amp; ${oAppModel>/currentView} === 'adminConsole' ? true : false}">
+									<Button text="{i18n>PREVIEW_TEXT}" icon="sap-icon://customfont/Eye" visible="{= ${oAppModel>/openPreviewWorkFlow} === false}"
+										class="wbCustomButtonClass" type="Transparent" press="previewFn"/>
+									<u:FileUploader icon="sap-icon://upload" class="wbUploadButtonPosition wbCustomButtonClass" name="myFileUpload" uploadUrl="upload/"
+										tooltip="{i18n>UPLOAD_FILE_TEXT}" change="uploadExcelWorkFlow" style="Emphasized" fileType="xlsx" buttonOnly="true"
+										sameFilenameAllowed="true" additionalData="excelFileUploaderWorkFlow" buttonText="{i18n>UPLOAD_EXCEL}"/>
+								</HBox>
+								<HBox renderType="Bare" alignItems="Center" justifyContent="End" class="sapUiSizeCompact"
+									visible="{= (${oAppModel>/currentViewPage} === 'workLoad' || ${oAppModel>/currentViewPage} === 'advancedWorkFlow' || ${oAppModel>/currentViewPage} === 'createAdvancedWorkFlow' || ${oAppModel>/currentViewPage} === 'graphConfiguration' &amp;&amp; ${oAppModel>/currentTab} === 'createGraphs' || ${oAppModel>/currentViewPage} === 'userRoleManagement' || ${oAppModel>/currentViewPage} === 'workFlow' || ${oAppModel>/currentViewPage} === 'createWorkFlow') &amp;&amp; ${oAppModel>/currentView} === 'adminConsole' ? true : false}">
+									<Button text="{i18n>APPLY_TEXT}" icon="sap-icon://customfont/SaveIcon" class="wbCustomButtonClass" type="Transparent" press="onClickApply"/>
+									<Button text="{i18n>RESET_TEXT}" icon="sap-icon://customfont/ResetIcon" class="wbCustomButtonClass" type="Transparent" press="onClickReset"/>
+								</HBox>
+								<HBox renderType="Bare" alignItems="Center" justifyContent="End" class="sapUiSizeCompact"
+									visible="{= ${oAppModel>/currentViewPage} === 'manageWorkFlow' &amp;&amp; ${oAppModel>/currentView} === 'adminConsole' ? true : false}">
+									<Button text="{i18n>RESET_TEXT}" icon="sap-icon://customfont/ResetIcon" class="wbCustomButtonClass" type="Transparent"
+										enabled="{oAppModel>/enableMWorkflowButton}" press="onClickReset"/>
+									<Button text="{i18n>DELETE_TEXT}" icon="sap-icon://delete" class="wbCustomButtonClass" type="Transparent"
+										enabled="{oAppModel>/enableMWorkflowButton}" press="onDeleteProcess"/>
+								</HBox>
+								<HBox renderType="Bare" alignItems="Center" justifyContent="End" class="sapUiSizeCompact"
+									visible="{= ${oAppModel>/currentViewPage} === 'cfaApproverMatrix' ? true : false}">
+									<Button text="{i18n>EXPORT_TEXT}" icon="sap-icon://customfont/ExportIcon" class="wbCustomButtonClass" type="Transparent"
+										press="exportCfaData"/>
+								</HBox>
+								<HBox renderType="Bare" alignItems="Center" justifyContent="End" class="sapUiSizeCompact"
+									visible="{= (${oAppModel>/currentViewPage} === 'taskuiGenerator' || ${oAppModel>/currentViewPage} === 'uiGenerator') &amp;&amp; ${oAppModel>/currentView} === 'adminConsole' ? true : false}">
+									<Button text="{i18n>APPLY_TEXT}" icon="sap-icon://customfont/SaveIcon" class="wbCustomButtonClass" type="Transparent"
+										press="onClickApplyUiGenerator"/>
+									<Button text="{i18n>RESET_TEXT}" icon="sap-icon://customfont/ResetIcon" class="wbCustomButtonClass" type="Transparent"
+										press="onClickResetUiGenerator"/>
+								</HBox>
+								<HBox renderType="Bare" alignItems="Center" justifyContent="End" class="sapUiSizeCompact"
+									visible="{= ${oAppModel>/currentView} !== 'unifiedInbox' &amp;&amp; (${oAppModel>/currentViewPage} === 'versionControl' &amp;&amp; ${oUserSettingsModel>/settings/selectedVersionTab}==='createVersion') ? true : false}">
+									<!--uploadAttachmentCounter-->
+									<Button text="{i18n>APPLY_TEXT}" icon="sap-icon://customfont/SaveIcon" class="wbCustomButtonClass" type="Transparent" press="onClickApply"/>
+									<Button text="{i18n>RESET_TEXT}" icon="sap-icon://customfont/ResetIcon" class="wbCustomButtonClass" type="Transparent" press="onClickReset"/>
+								</HBox>
+								<HBox renderType="Bare" alignItems="Center" justifyContent="End" class="sapUiSizeCompact"
+									visible="{= ${oAppModel>/currentView} !== 'unifiedInbox' &amp;&amp; (${oAppModel>/currentViewPage} === 'versionControl' &amp;&amp; ${oUserSettingsModel>/settings/selectedVersionTab}==='versionHistory') ? true : false}">
+									<!--uploadAttachmentCounter-->
+									<Button text="{i18n>UPLOADING_TEXT} {oUserSettingsModel>/settings/uploadAttachmentCounter} files" icon="sap-icon://restart"
+										class="wbCustomButtonClass wbIconSpinner wbDefaultCursor" type="Transparent"
+										visible="{= ${oUserSettingsModel>/settings/uploadAttachmentCounter}>0}"/>
+									<!--<Text text="
+													 visible="{path: 'oUserSettingsModel>/settings/uploadAttachmentCounter', formatter:'oneapp.incture.workbox.util.formatter.wbUploadAttachmentCounter'}"
+										Uploading {oUserSettingsModel>/settings/uploadAttachmentCounter} files" visible="{= ${oUserSettingsModel>/settings/uploadAttachmentCounter}>0}"></Text>-->
+								</HBox>
+								<!--End - Admin Console screen Component-->
+								<HBox renderType="Bare" alignItems="Center" justifyContent="End" class="sapUiSizeCompact"
+									visible="{= (${oAppModel>/currentViewPage} === 'emailTemplate' &amp;&amp; ${oAppModel>/currentView} === 'adminConsole' &amp;&amp; ${oAppModel>/emailTemplateVisible} === true) ? true : false}">
+									<Text text="{i18n>EMAIL_NOTE_FOR_SUGGESTION}" class="wbAdminEmailTemplateNoteTextClass sapUiSmallMarginBeginEnd"/>
+									<Button text="{i18n>APPLY_TEXT}" icon="sap-icon://customfont/SaveIcon" class="wbCustomButtonClass" type="Transparent" press="sendEmailfn"/>
+									<Button icon="sap-icon://decline" text="{i18n>CLOSE_TEXT}" tooltip="{i18n>CLOSE_TEXT}" press="onCloseCreateTaskFn" type="Transparent"
+										class="wbCustomButtonClass wbCustomCloseButtonClass"/>
+								</HBox>
+								<!--Start - Create Task screen Component-->
+								<Button icon="sap-icon://decline" tooltip="{i18n>CLOSE_TEXT}" press="onCloseCreateTaskFn" type="Transparent" class="wbCustomButtonClass"
+									visible="{= ${oAppModel>/currentView} === 'createTask' ? true : false}"/>
+								<!--End - Create Task screen Component-->
+							</tnt:ToolHeader>
+						</tnt:header>
+						<tnt:sideContent>
+							<custom:ExtSideNavigation>
+								<tnt:NavigationList id="WB_SIDENAV_LIST" items="{oAppModel>/navigationItems/navigationDto}">
+									<tnt:NavigationListItem visible="{oAppModel>/functionality/visibility}" text="{oAppModel>name}" items="{oAppModel>dtoList}"
+										icon="{oAppModel>icon}" select="onSelectApp" key="{oAppModel>inboxId}"
+										enabled="{= ${oAppModel>inboxId} === 'advancedWorkFlow' ? false:true}">
+										<custom:ExtNavigationListItem text="{oAppModel>name}" icon="{oAppModel>icon}" select="onSelectApp" key="{oAppModel>inboxId}"
+											count="{oAppModel>count}"></custom:ExtNavigationListItem>
+									</tnt:NavigationListItem>
+								</tnt:NavigationList>
+								<custom:footer>
+									<FlexBox class="wbSideNavListFooterClass" direction="{oAppModel>/functionality/direction}" items="{oAppModel>/navigationItems}"
+										alignItems="Start">
+										<Image src="{oAppModel>icon}" press="onSelectView" class="wbFooterNavIconClass sapUiTinyMarginEnd" tooltip="{oAppModel>name}"
+											visible='{parts:["oAppModel>/currentView", "oAppModel>inboxId"], formatter:"oneapp.incture.workbox.util.formatter.wbFooterIconColor"}'/>
+									</FlexBox>
+								</custom:footer>
+							</custom:ExtSideNavigation>
+						</tnt:sideContent>
+						<tnt:mainContents>
+							<NavContainer id="WORKBOX_NAV_CONTAINER" width="100%" busy="{oAppModel>/transitionWait}" busyIndicatorDelay="0"></NavContainer>
+							<HBox visible="{= ${oUserSettingsModel>/settings/notificationStyle} ==='Banner'}" class="wbNotificationBannerPosition">
+								<core:Fragment fragmentName="oneapp.incture.workbox.fragment.NotificationBanner" type="XML"></core:Fragment>
+							</HBox>
+							<!--<Fragment visible="{= ${oUserSettingsModel>/settings/notificationStyle}==='Banner'}"></Fragment>-->
+						</tnt:mainContents>
+					</tnt:ToolPage>
+				</content>
+			</Page>
+		</pages>
+	</App>
+</mvc:View>

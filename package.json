@@ -1,0 +1,19 @@
+{
+  "name": "workbox",
+  "version": "0.0.1",
+  "description": "",
+  "devDependencies": {
+    "@ui5/cli": "1.14.0",
+    "@sap/ui5-builder-webide-extension": "1.0.x",
+    "@sap/grunt-sapui5-bestpractice-build": "1.3.64"
+  },
+  "scripts": {
+    "build": "ui5 build --clean-dest --include-task=generateManifestBundle generateCachebusterInfo"
+  },
+  "ui5": {
+    "dependencies": [
+      "@sap/ui5-builder-webide-extension"
+    ]
+  },
+  "private": "true"
+}

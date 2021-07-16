@@ -1,0 +1,76 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:custom="oneapp.incture.workbox.controlExtension">
+	<HBox justifyContent="Start" renderType="Bare" alignItems="Center" class=" sapUiSizeCompact ">
+		<Button icon="sap-icon://arrow-left" text="{i18n>BACK_TEXT}" class="wbCustomButtonClass wbTextBoldClass sapUiTinyMarginTop"
+			press="backToSubsScreen"/>
+	</HBox>
+	<VBox justifyContent="Start" width="75%" renderType="Bare">
+		<HBox renderType="Bare" width="100%" justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginBottom">
+			<Label text="{i18n>SUBSTITUTEE_TEXT}" class=" wbSubsUserName"/>
+			<!--<Input class="wbDefaultCustomInputWrapper " placeholder="{i18n>ENTER_NAME}"  width="70%"-->
+			<!--	value="{oUserSettingsModel>/addSubstituteDto/substitutingUserName}" suggest="handleSubstitutionSuggests($event,'substitutedUser')"-->
+			<!--	showSuggestion="true" filterSuggests="true" suggestionItems="{path:'oConstantsModel>/allUsers', templateShareable:true}"-->
+			<!--	suggestionItemSelected="substitutionSuggestionItemSelect">-->
+			<!--	<suggestionItems>-->
+			<!--		<core:Item key="{oConstantsModel>userId}" text="{oConstantsModel>userFirstName} {oConstantsModel>userLastName}"/>-->
+			<!--	</suggestionItems>-->
+			<!--</Input>-->
+			<Input class="wbDefaultCustomInputWrapper " placeholder="{i18n>ENTER_NAME}" width="70%" selectedKey="{oUserSettingsModel>/addSubstituteDto/substitutingUser}"
+				value="{oUserSettingsModel>/addSubstituteDto/substitutingUserName}" suggest="handleSubstitutionSuggests($event,'substitutedUser')"
+				showSuggestion="true" filterSuggests="true" suggestionItems="{path:'oConstantsModel>/allUsers', templateShareable:true}"
+				suggestionItemSelected="substitutionSuggestionItemSelect" >
+				<suggestionItems>
+					<core:Item key="{oConstantsModel>userId}" text="{oConstantsModel>userFirstName} {oConstantsModel>userLastName}"/>
+				</suggestionItems>
+			</Input>
+		</HBox>
+		<HBox renderType="Bare" width="100%" justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginBottom">
+			<Label text="{i18n>VALIDITY_PERIOD_TEXT}" class=" wbSubsUserName"/>
+			<!--<HBox justifyContent="SpaceBetween" renderType="Bare" width="70%">-->
+			<!--	<DatePicker placeholder="dd MMM yyyy" change="handleFirstDateChange" value="{oUserSettingsModel>/addSubstituteDto/startDate}"-->
+			<!--		class="wbDefaultCustomInputWrapper sapUiTinyMarginEnd" width="50%"/>-->
+			<!--	<DatePicker placeholder="dd MMM yyyy" change="handleSecondDateChange" value="{oUserSettingsModel>/addSubstituteDto/endDate}"-->
+			<!--		class="wbDefaultCustomInputWrapper sapUiTinyMarginBegin" width="50%"/>-->
+			<!--</HBox>-->
+			<custom:ExtDateRangeSelection displayFormat="dd MMM yyyy" placeholder="dd MMM yyyy" enabled="true" change="isSubsEdited($event,'DateRange')"
+				minDate="{path: 'oUserSettingsModel>/settings/selectedSetting',type:'sap.ui.model.type.Object' ,formatter: 'oneapp.incture.workbox.util.formatter.wbSetMinDateSubsRule'}"
+				maxDate="{path: 'oUserSettingsModel>/settings/selectedSetting',type:'sap.ui.model.type.Object' ,formatter: 'oneapp.incture.workbox.util.formatter.wbSetMaxDateSubsRule'}"
+				dateValue="{path: 'oUserSettingsModel>/addSubstituteDto/startDate' , type:'sap.ui.model.type.Object', formatter: 'oneapp.incture.workbox.util.formatter.wbReturnDatePickerDateObj'}"
+				secondDateValue="{path: 'oUserSettingsModel>/addSubstituteDto/endDate' , type:'sap.ui.model.type.Object', formatter: 'oneapp.incture.workbox.util.formatter.wbReturnDatePickerDateObj'}"
+				class="sapUiSizeCompact wbDefaultCustomInputWrapper" width="70%"/>
+		</HBox>
+		<HBox renderType="Bare" width="100%" justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginBottom">
+			<Label text="{i18n>PROCESSES_TEXT}" class=" wbSubsUserName"/>
+			<!--<MultiComboBox class="sapUiSizeCompact wbDefaultCustomInputWrapper wbSettingsSubsTokenizer"  width="70%" showButton="true" editable="true" enabled="true"-->
+			<!--	items="{oConstantsModel>/processNames}" selectedKeys="{oUserSettingsModel>/addSubstituteDto/processList}"-->
+			<!--	selectionChange="subsProcessSelection">-->
+			<!--	<core:Item key="{oConstantsModel>processName}" text="{oConstantsModel>processDisplayName}"/>-->
+			<!--</MultiComboBox>-->
+			<MultiComboBox class="sapUiSizeCompact wbDefaultCustomInputWrapper wbSettingsSubsTokenizer" width="70%" showButton="true" editable="true"
+				enabled="true" items="{oConstantsModel>/processNames}" selectedKeys="{oUserSettingsModel>/addSubstituteDto/processList}"
+				selectionFinish="subsProcessSelection">
+				<core:Item key="{oConstantsModel>processName}" text="{oConstantsModel>processDisplayName}"/>
+			</MultiComboBox>
+		</HBox>
+		<HBox renderType="Bare" width="100%" justifyContent="SpaceBetween" alignItems="Start" class="sapUiTinyMarginTop">
+			<Label text="{i18n>PERMISSIONS_TEXT}" class=" wbSubsUserName"/>
+			<VBox justifyContent="Start" renderType="Bare" width="70%">
+				<HBox justifyContent="SpaceBetween">
+					<Label text="{i18n>TASK_APPROVE_OR_REJECT_TEXT}"/>
+					<Switch change="isSubsEdited($event,'IsActive')" class="wbCustomSwitch"/>
+				</HBox>
+				<HBox justifyContent="SpaceBetween">
+					<Label text="{i18n>EMAIL_TEXT}"/>
+					<Switch change="isSubsEdited($event,'IsActive')" class="wbCustomSwitch"/>
+				</HBox>
+				<HBox justifyContent="SpaceBetween">
+					<Label text="{i18n>TASK_CHAT_TEXT}"/>
+					<Switch change="isSubsEdited($event,'IsActive')" class="wbCustomSwitch"/>
+				</HBox>
+				<HBox justifyContent="SpaceBetween">
+					<Label text="{i18n>TASK_FORWARD_TEXT}"/>
+					<Switch change="isSubsEdited($event,'IsActive')" class="wbCustomSwitch"/>
+				</HBox>
+			</VBox>
+		</HBox>
+	</VBox>
+</core:FragmentDefinition>

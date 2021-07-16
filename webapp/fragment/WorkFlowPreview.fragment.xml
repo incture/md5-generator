@@ -1,0 +1,113 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout" xmlns:NG="sap.suite.ui.commons.networkgraph"
+	xmlns:layout="sap.suite.ui.commons.networkgraph.layout" xmlns:mvc="sap.ui.core.mvc">
+	<HBox renderType="Bare" alignItems="Center" justifyContent="SpaceBetween" class="wbTaskDetailHeaderClass wbHorizontalLine">
+		<Title class="wbTextBoldClass" text="{oDefaultDataModel>/createWorkFlowData/processDetail/processDisplayName} {i18n>PREVIEW_TEXT}"/>
+		<core:Icon src="sap-icon://decline" class="wbTaskDetailHeaderIconClass" press="closePreviewPage" tooltip="{i18n>CLOSE_TEXT}"/>
+	</HBox>
+	<ScrollContainer class="wbMasterPageStyle"
+		height="{path : 'oDefaultDataModel>/previewTaskDto' ,formatter: 'oneapp.incture.workbox.util.formatter.wbPreview'}" width="100%"
+		horizontal="false" vertical="true">
+		<VBox renderType="Bare" class="sapUiSizeCompact" width="100%" height="100%">
+			<VBox renderType="Bare" width="100%" class="wbTaskDetailHeaderClass wbHorizontalLine">
+				<ScrollContainer horizontal="true" vertical="false" width="100%">
+					<HBox justifyContent="Start" renderType="Bare" alignItems="Center" class="wbPreviewGraph wbAdminWfGraphContainer">
+						<NG:Graph graphReady="refreshGraphFn" enableWheelZoom="false" enableZoom="false" orientation="LeftRight"
+							nodes="{oDefaultDataModel>/previewTaskDto}" lines="{oDefaultDataModel>/mappingLinesPreview}" renderType="Svg">
+							<!--<NG:layoutData>-->
+							<!--	<FlexItemData growFactor="1" shrinkFactor="1" baseSize="0%" minWidth="auto"/>-->
+							<!--</NG:layoutData>-->
+							<NG:layoutAlgorithm>
+								<layout:LayeredLayout mergeEdges="false" nodePlacement="Simple" nodeSpacing="55"/>
+							</NG:layoutAlgorithm>
+							<NG:nodes>
+								<NG:Node showDetailButton="false" showActionLinksButton="false" descriptionLineSize="0" key="{oDefaultDataModel>templateId}"
+									title="{oDefaultDataModel>eventName}" shape="Circle" status="Success" press="showTaskDetailsPreviewFn"/>
+							</NG:nodes>
+							<NG:lines>
+								<NG:Line arrowPosition="End" arrowOrientation="ParentOf" from="{oDefaultDataModel>from}" to="{oDefaultDataModel>to}" stretchToCenter="true"
+									press="linePress"></NG:Line>
+							</NG:lines>
+						</NG:Graph>
+					</HBox>
+				</ScrollContainer>
+			</VBox>
+			<HBox renderType="Bare" alignItems="Center" justifyContent="SpaceBetween" class="sapUiSmallMarginBeginEnd sapUiTinyMarginTop">
+				<Text text="{i18n>SUB_TEXT}: {oDefaultDataModel>/previewHeaderDto/subject}" class="wbTaskDetailHeaderText"/>
+				<HBox renderType="Bare" alignItems="Center" visible="false">
+					<Button text="{i18n>CREATE_CUSTOM_LAYOUT}" type="Emphasized" class="wbEmphasizedButtonStyleClass sapUiTinyMarginBegin"
+						press="showLayoutFraming" visible="{= ${oDefaultDataModel>/isLayoutFraming} === false ? true:false}"/>
+					<Button text="{i18n>UPDATE_TEMPLATE_TEXT}" type="Emphasized" press="updateTaskConfigFnWF"
+						class="wbEmphasizedButtonStyleClass sapUiTinyMarginBegin" enabled="{= ${oDefaultDataModel>/isLayoutChanged}}"
+						visible="{= ${oDefaultDataModel>/isLayoutFraming} === true ? true:false}"/>
+					<Button text="{i18n>DELETE_TEXT} {i18n>LAYOUT_TEXT}" type="Emphasized" class="wbEmphasizedButtonStyleClass sapUiTinyMarginBegin"
+						enabled="{= ${oDefaultDataModel>/taskTemplateData/layoutsData}.length > 0 ? true : false}"
+						visible="{= ${oDefaultDataModel>/isLayoutFraming} === true ? true:false}" press="deleteAllLayoutWF"/>
+					<!--enabled='{parts : ["oDefaultDataModel>/taskTemplateData","oDefaultDataModel>/selectedTaskTemplate"] ,formatter: "oneapp.incture.workbox.util.formatter.wbCustomLayoutDelete"}' visible="{= ${oDefaultDataModel>/isLayoutFraming} === true ? true:false}" press="deleteAllLayoutWF"-->
+					<Button text="{i18n>DEFAULT_LAYOUT}" type="Emphasized" class="wbEmphasizedButtonStyleClass sapUiTinyMarginBegin"
+						visible="{= ${oDefaultDataModel>/isLayoutFraming} === true ? true:false}" press="showDefaultLayout"/>
+				</HBox>
+			</HBox>
+			<VBox visible="{= ${oDefaultDataModel>/isLayoutFraming} === false ? true:false}">
+				<HBox renderType="Bare" alignItems="Center" width="100%">
+					<VBox renderType="Bare" width="100%" class="wbTaskDetailCreatedInfoClass">
+						<HBox renderType="Bare" alignItems="Center" width="100%" class="wbTaskDetailCreatedByContentClass wbTaskDetailCreatedByBorderClass">
+							<Avatar src="test-resources/sap/tnt/images/Woman_avatar_01.png" displaySize="XS"/>
+							<VBox renderType="Bare" width="100%" class="sapUiTinyMarginBegin">
+								<Text text="{i18n>CREATED_BY_TEXT}" class="wbTaskDetailCreatedByTextClass"/>
+								<HBox renderType="Bare" alignItems="Center" justifyContent="SpaceBetween">
+									<Text text="{oAppModel>/loginUserName}" class="wbTaskDetailCreatedByNameClass"/>
+									<Text text="{i18n>CREATED_AT_DATE_TEXT}"/>
+								</HBox>
+							</VBox>
+						</HBox>
+						<HBox renderType="Bare" alignItems="Center" width="100%" class="wbTaskDetailCreatedByContentClass">
+							<Text text="{i18n>DESCRIPTION_TEXT}"/>
+							<Text text=": {oDefaultDataModel>/previewHeaderDto/description}" class="wbTextBoldClass"/>
+						</HBox>
+					</VBox>
+				</HBox>
+				<l:VerticalLayout width="100%" visible="{= ${oDefaultDataModel>/previewGridDto}.length > 0}">
+					<l:Grid defaultSpan="L3 M6 S12" vSpacing="0.5" class="wbTaskDetailContentClass wbTaskDetailPaddingClass"
+						content="{oDefaultDataModel>/previewGridDto}">
+						<VBox renderType="Bare" height="auto" class="sapUiTinyMarginTop">
+							<Label text="{oDefaultDataModel>label}" required="{oDefaultDataModel>isMandatory}"/>
+							<Input width="80%" class="wbTaskDetailInputWrapper" editable="false"/>
+						</VBox>
+					</l:Grid>
+				</l:VerticalLayout>
+				<VBox renderType="Bare" class="wbTaskDetailContentClass wbTaskDetailPaddingClass"
+					visible="{= ${oDefaultDataModel>/previewAttachmentDto}.length > 0}">
+					<HBox renderType="Bare" alignItems="Center" justifyContent="SpaceBetween" class="wbTaskDetailAttachmentClass" width="102.25%">
+						<Text text="{i18n>ATTACHMENTS_TEXT}"/>
+						<Button text="{i18n>DOWNLOAD_ALL_TEXT}" class="wbCustomButtonClass" type="Emphasized" enabled="false"/>
+					</HBox>
+					<HBox renderType="Bare" alignItems="Center" items="{oDefaultDataModel>/previewAttachmentDto}">
+						<HBox width="25%" renderType="Bare" alignItems="Center">
+							<Image src="images/AttachmentPDF.png" class="wbCreateTaskFragmentAttachmentImage"/>
+							<VBox renderType="Bare" class="sapUiTinyMarginBegin">
+								<Label text="{oDefaultDataModel>label}" required="{oDefaultDataModel>isMandatory}" class="wbTaskDetailFileNameClass"/>
+								<Text text="filesize" class="sapUiTinyMarginTop wbTaskDetailFileSizeClass"/>
+							</VBox>
+						</HBox>
+					</HBox>
+				</VBox>
+				<VBox renderType="Bare"
+					visible="{= ${oDefaultDataModel>/previewHeaderDto/url} || ${oDefaultDataModel>/createWorkFlowData/processDetail/url} ? true : false}">
+					<core:HTML
+						content="&lt;div height=&quot;100%&quot;&gt; &lt;iframe id=&quot;ID_FRAME_DETAIL&quot; width=&quot;100%&quot; height=&quot;100%&quot; class=&quot;wbTaskDetailiFrameClass&quot; seamless&gt;&lt;/iframe&gt; &lt;/div&gt;"></core:HTML>
+				</VBox>
+			</VBox>
+			<VBox renderType="Bare" class="wbAdminTaskConfigPaddingClass sapUiTinyMarginBeginEnd"
+				visible="{= ${oDefaultDataModel>/isLayoutFraming} === true ? true:false}">
+				<HBox renderType="Bare" alignItems="Center" justifyContent="SpaceBetween">
+					<HBox renderType="Bare" alignItems="Center">
+						<Button text="{i18n>ADD_TEXT} {i18n>LAYOUT_TEXT}" class="wbDefaultButtonClass sapUiTinyMarginEnd" press="createLayoutFnWF"/>
+						<Button text="{i18n>COPY_TEXT} {i18n>LAYOUT_TEXT}" class="wbDefaultButtonClass" press="openCopyLayoutFragFnWF"/>
+					</HBox>
+					<!--<Button text="{i18n>UPDATE_TEMPLATE_TEXT}" type="Emphasized" press="updateTaskConfigFnWF" class="wbEmphasizedButtonStyleClass" enabled="{= ${oDefaultDataModel>/isLayoutChanged}}"/>-->
+				</HBox>
+				<VBox renderType="Bare" alignItems="Center" width="100%" id="ID_CREATE_TASK_DETAIL_LAYOUT_WF" busyIndicatorDelay="0"/>
+			</VBox>
+		</VBox>
+	</ScrollContainer>
+</core:FragmentDefinition>
