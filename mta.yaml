@@ -1,0 +1,65 @@
+ID: workboxdev
+_schema-version: '2.1'
+parameters:
+  deploy_mode: html5-repo
+version: 0.0.1
+modules:
+  - name: workboxdev-approuter
+    type: approuter.nodejs
+    path: workboxdev-approuter
+    parameters:
+      disk-quota: 256M
+      memory: 100M
+    requires:
+      - name: workboxdev_html5_repo_runtime
+      - name: uaa_workboxdev
+      - name: dest_workboxdev
+      - name: conn_workboxdev
+  - name: workboxdev_ui_deployer
+    type: com.sap.html5.application-content
+    path: workboxdev_ui_deployer
+    requires:
+      - name: workboxdev_html5_repo_host
+    build-parameters:
+      requires:
+        - name: workbox
+          artifacts:
+            - './*'
+          target-path: resources/workbox
+  - name: workbox
+    type: html5
+    path: workbox
+    build-parameters:
+      builder: custom
+      commands:
+        - npm install
+        - npm run build
+      supported-platforms: []
+      build-result: dist
+resources:
+  - name: workboxdev_html5_repo_runtime
+    parameters:
+      service-plan: app-runtime
+      service: html5-apps-repo
+    type: org.cloudfoundry.managed-service
+  - name: workboxdev_html5_repo_host
+    parameters:
+      service-plan: app-host
+      service: html5-apps-repo
+    type: org.cloudfoundry.managed-service
+  - name: uaa_workboxdev
+    parameters:
+      path: ./xs-security.json
+      service-plan: application
+      service: xsuaa
+    type: org.cloudfoundry.managed-service
+  - name: dest_workboxdev
+    parameters:
+      service-plan: lite
+      service: destination
+    type: org.cloudfoundry.managed-service
+  - name: conn_workboxdev
+    parameters:
+      service-plan: lite
+      service: connectivity
+    type: org.cloudfoundry.managed-service

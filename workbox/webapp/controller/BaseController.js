@@ -757,11 +757,11 @@ sap.ui.define([
 		notificationWebSocket: function () {
 			var that = this;
 			var userId = this.oAppModel.getProperty("/loggedInUserDetails/userId");
-			var url = "wss://testbotkbniwmq1aj.hana.ondemand.com/workbox-product/websocketNotification/" + userId; //NEO DEV URL
+			// var url = "wss://testbotkbniwmq1aj.hana.ondemand.com/workbox-product/websocketNotification/" + userId; //NEO DEV URL
 			// var url = "wss://workboxweba8b98c03e.hana.ondemand.com/workbox-product/websocketNotification/" + userId; // NEO QA URL
 
 			// var url = "wss://workbox-spring-boot-qa.cfapps.eu10.hana.ondemand.com/workbox/websocketNotification/" + userId; //CF QA URL
-			// var url = "wss://workbox-spring-boot-new.cfapps.eu10.hana.ondemand.com/workbox/websocketNotification/" + userId; //CF DEV URL
+			var url = "wss://workbox-spring-boot-new.cfapps.eu10.hana.ondemand.com/workbox/websocketNotification/" + userId; //CF DEV URL
 
 			this.notifSocket = new WebSocket(url);
 			this.notifSocket.onopen = function (event) {
@@ -1278,10 +1278,10 @@ sap.ui.define([
 
 		collaboratioWebSocket: function (sUserId) {
 			var that = this;
-			var url = "wss://testbotkbniwmq1aj.hana.ondemand.com/chat/websocketChat/web/" + sUserId; //NEO DEV URL
+			// var url = "wss://testbotkbniwmq1aj.hana.ondemand.com/chat/websocketChat/web/" + sUserId; //NEO DEV URL
 			// var url = "wss://workboxweba8b98c03e.hana.ondemand.com/chat/websocketChat/web/" + sUserId; //NEO QA URL
 
-			//var url = "wss://workchat.cfapps.eu10.hana.ondemand.com/chat/websocketChat/web/" + sUserId; //CF DEV URL
+			var url = "wss://workchat.cfapps.eu10.hana.ondemand.com/chat/websocketChat/web/" + sUserId; //CF DEV URL
 			// var url = "wss://workchatqa.cfapps.eu10.hana.ondemand.com/chat/websocketChat/web/" + sUserId; // CF QA URL
 			this.socket = new WebSocket(url);
 			this.socket.onopen = function (event) {};

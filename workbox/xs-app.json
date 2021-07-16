@@ -1,0 +1,29 @@
+{
+	"welcomeFile": "/index.html",
+	"authenticationMethod": "route",
+	"logout": {
+		"logoutEndpoint": "/do/logout"
+	},
+	"routes": [{
+		"source": "^/DEC_INC/(.*)$",
+		"target": "$1",
+		"authenticationType": "none",
+		"destination": "DEC_INC",
+		"csrfProtection": false
+	}, {
+		"source": "^(.*)$",
+		"target": "$1",
+		"service": "html5-apps-repo-rt",
+		"authenticationType": "xsuaa"
+	}, {
+		"source": "^/WorkboxJavaService/",
+		"target": "/",
+		"destination": "Java_Workbox_NEW",
+		"csrfProtection": false
+	}, {
+		"source": "^/ActJavaService/",
+		"target": "/",
+		"destination": "WorkChatJavaService",
+		"csrfProtection": false
+	}]
+}

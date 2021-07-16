@@ -1,0 +1,28 @@
+{
+	"authenticationMethod": "route",
+	"logout": {
+		"logoutEndpoint": "/do/logout",
+		"logoutPage": "/oneappinctureworkbox/index.html"
+	},
+	"routes": [{
+		"source": "^/WorkboxJavaService/",
+		"target": "/workbox/",
+		"destination": "Java_Workbox_NEW",
+		"csrfProtection": false
+	}, {
+		"source": "^/ActJavaService/",
+		"target": "/",
+		"destination": "WorkChatJavaService",
+		"csrfProtection": false
+	}, {
+		"source": "^/sap/opu/odata/",
+		"target": "/",
+		"destination": "PR_APPROVAL_PROCESS",
+		"csrfProtection": false
+	}, {
+		"source": "^(.*)$",
+		"target": "$1",
+		"service": "html5-apps-repo-rt",
+		"authenticationType": "xsuaa"
+	}]
+}
