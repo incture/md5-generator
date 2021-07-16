@@ -10,7 +10,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.ColumnDefault;
-import org.omg.CORBA.PRIVATE_MEMBER;
 
 @Entity
 @Table(name = "CUSTOM_ATTR_TEMPLATE")
