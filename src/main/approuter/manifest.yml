@@ -1,0 +1,17 @@
+
+applications:
+- name: workbox-spring-boot-approuter-2
+#  host: spring-xsuaa-cloud-foundry-approuter
+  buildpack: https://github.com/cloudfoundry/nodejs-buildpack.git
+  memory: 128M
+  env:
+#    XSAPPNAME: workbox-spring-boot-xsappp
+    TENANT_HOST_PATTERN: "^(.*)workbox-spring-boot.cfapps.eu10.hana.ondemand.com"
+    destinations: >
+      [{
+         "name":"spring-xsuaa-cf-destination",
+         "url" :"https://workbox-spring-boot.cfapps.eu10.hana.ondemand.com",
+         "forwardAuthToken": true}
+      ]
+  services:
+    - Workbox-cf-xsuaa-2

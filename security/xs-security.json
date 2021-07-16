@@ -1,0 +1,32 @@
+{
+    "xsappname": "workbox-spring-boot-xsappp",
+    "description": "Roles for spring xsuaa app",
+    "tenant-mode": "dedicated",
+    "scopes": [
+        {
+            "name": "$XSAPPNAME.Employee",
+            "description": "Employee scope"
+        },
+        {
+            "name": "$XSAPPNAME.Manager",
+            "description": "Manager scope"
+        }
+    ],
+    "role-templates": [
+        {
+            "name": "Employee",
+            "description": "Role for employee to read movie listings and update reservations",
+            "scope-references": [
+                "$XSAPPNAME.Employee"
+            ]
+        },
+        {
+            "name": "Manager",
+            "description": "Role for manager to create new movie listings and remove existing ones",
+            "scope-references": [
+                "$XSAPPNAME.Employee",
+                "$XSAPPNAME.Manager"
+            ]
+        }
+    ]
+}

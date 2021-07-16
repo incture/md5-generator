@@ -1,0 +1,20 @@
+---
+applications:
+- name: Workbox-spring-boot-new
+#- name: qwerjaash
+#  host: spring-xsuaa-cloud-foundry
+  memory: 700M
+  random-route: false
+  path: target/Workbox-spring-boot-0.0.1-SNAPSHOT.war
+  buildpack: https://github.com/cloudfoundry/java-buildpack.git
+#  env:
+#      JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{enabled: false}' 
+#      JAVA_OPTS: -Djava.security.egd=file:///dev/./urandom
+  services:
+  - uaa_workflowtiles
+  - workflow_workflowtiles
+  - Workbox-logs
+  - Workbox_Dev
+  - dest_WorkBox 
+  #- Workboxtrail2
+  #- Workbox-xsuaa
